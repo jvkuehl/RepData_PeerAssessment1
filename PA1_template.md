@@ -2,7 +2,8 @@
 
 
 ## Loading and preprocessing the data 
-```{r loaddata}
+
+```r
 activity.raw = read.csv(unz("activity.zip", "activity.csv"))
 activity = na.omit(activity.raw)
 ```
@@ -10,29 +11,52 @@ activity = na.omit(activity.raw)
 
 
 ## What is mean total number of steps taken per day?
-```{r histogram, fig.height=5, fig.width=5 }
+
+```r
 library(plyr)
 perday2 = ddply(activity, "date", transform, day=sum(steps) )
 hist(perday2$day, main= "Frequency of Steps Taken Each Day", xlab="Number of Steps")
 ```
 
-```{r  mean and mediam}
+![plot of chunk histogram](figure/histogram.png) 
+
+
+```r
 mean(perday2$day)
+```
+
+```
+## [1] 10766
+```
+
+```r
 median(perday2$day)
+```
+
+```
+## [1] 10765
 ```
 
 
 
 ## What is the average daily activity pattern?
-```{r timeseries}
+
+```r
 byinterval = ddply(activity, "interval", transform, meanint=mean(steps))
 with(byinterval, plot(interval, meanint,  type="l" ))
 ```
 
+![plot of chunk timeseries](figure/timeseries.png) 
+
 
 ### What is the interval that has the largest average number of steps taken?
-```{r maxinterval}
+
+```r
 byinterval[which.max(byinterval$meanint), "interval"]
+```
+
+```
+## [1] 835
 ```
 
 
@@ -44,7 +68,5 @@ byinterval[which.max(byinterval$meanint), "interval"]
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
-```{r}
 
-```
 
