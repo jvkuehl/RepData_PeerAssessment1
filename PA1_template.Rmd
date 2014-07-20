@@ -16,7 +16,7 @@ perday2 = ddply(activity, "date", transform, day=sum(steps) )
 hist(perday2$day, main= "Frequency of Steps Taken Each Day", xlab="Number of Steps")
 ```
 
-```{r  mean and mediam}
+```{r  meanandmedian}
 mean(perday2$day)
 median(perday2$day)
 ```
@@ -40,11 +40,40 @@ byinterval[which.max(byinterval$meanint), "interval"]
 
 ## Imputing missing values  HISTOGRAM
 
+### What are the total number of NA values from the orignal data set?
+```{r}
+sum(is.na(activity.raw))
+```
 
+### Fill in all of the missing values in the dataset
+```{r}
+### this is the avaerage number of  step taken per interval
+mean.place = mean(activity$step)
+### this replaces NA from the original file with the average
+activity.raw[is.na(activity.raw)] = mean.place
+activity.replace = activity.raw
+```
+
+
+### How does replacing the NA values affect mean total number of steps taken per day?
+```{r histogramNA, fig.height=5, fig.width=5 }
+perdayNA = ddply(activity.replace, "date", transform, day=sum(steps) )
+hist(perdayNA$day, main= "Frequency of Steps Taken Each Day", xlab="Number of Steps", breaks=11)
+```
+
+### What is the difference between the mean and the median after the NA values are replaced?
+```{r meanandmediandiff}
+mean(perday2$day) - mean(perdayNA$day)
+median(perday2$day) - median(perdayNA$day)
+```
+
+#### Using the average number of steps per 5 minute interval for the total dataset to replace NA did not change the average number of steps and decreased the median by 1.2 steps. 
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
 ```{r}
-
+activity$day = weekdays(as.Date(activity$date))
+library(chron)
+activity$weekend = is.weekend(as.Date(activity$date))
 ```
 
