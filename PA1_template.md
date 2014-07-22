@@ -75,6 +75,7 @@ sum(is.na(activity.raw))
 ```
 
 ### Fill in all of the missing values in the dataset
+#### I used the mean number of steps across all the intervals to fill in the missing data
 
 ```r
 ### this is the avaerage number of  step taken per interval
@@ -116,5 +117,18 @@ median(perday2$day) - median(perdayNA$day)
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
+#### Activity starts later on the weekend is a more consistent throughout the day.
 
+```r
+activity$day = weekdays(as.Date(activity$date))
+weekday = c("Monday","Tuesday","Wednesday","Thursday","Friday")
+weekend = c("Saturday","Sunday")
+activity$weekend[activity$day %in% weekday]  = "weekday"
+activity$weekend[activity$day %in% weekend]  = "weekend"
+byintervalweek = ddply(activity, .(interval,weekend), transform, meanintweek=mean(steps))
+library(ggplot2)
+ggplot(byintervalweek,aes(x=interval,y=meanintweek)) + geom_line() + facet_grid("weekend ~ .")
+```
+
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
 
